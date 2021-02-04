@@ -95,16 +95,12 @@ public class F_Per_RecordDAO {
 		try {
 			
 			conn = getConnection();
-			String sql = "select * from"
-					+ "(select alldata2.*, rownum r from "
-					+ "(SELECT alldata.*, rank() OVER(ORDER BY goals desc) ranked from "
-					+ "(SELECT DISTINCT mem.name, mem.profile, club.tname, per.goals, per.assist, per.played, per.league_num, per.club_num " + 
-					"FROM members mem " + 
-					"INNER JOIN CLUB_CREATE club " + 
-					"ON mem.CLUBNUM = club.CLUBNUM " + 
-					"INNER JOIN F_PERRECORD per " + 
-					"ON club.CLUBNUM = per.CLUB_NUM " + 
-					"WHERE per.LEAGUE_NUM=?) alldata)alldata2)where r >= ? and r <= ?";
+			String sql = "SELECT * FROM " + 
+					"(SELECT alldata2.*, rownum r from " + 
+					"(SELECT alldata1.*, rank() over(ORDER BY goals desc) ranked from " + 
+					"(SELECT fper.*, cc.tname FROM \r\n" + 
+					"(SELECT * FROM F_PERRECORD WHERE LEAGUE_NUM=?)fper, club_create cc " + 
+					"WHERE cc.CLUBNUM = fper.club_num)alldata1)alldata2) WHERE r >=? AND r<=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, Leauge_num);
 			pstmt.setInt(2, startRow);
@@ -115,8 +111,7 @@ public class F_Per_RecordDAO {
 				allUserList = new ArrayList<F_Per_RecordDTO>();
 				do {
 					F_Per_RecordDTO perdto = new F_Per_RecordDTO();
-					perdto.setName(rs.getString("name"));
-					perdto.setProfile(rs.getString("profile"));
+					perdto.setName(rs.getString("player"));
 					perdto.setTname(rs.getString("tname"));
 					perdto.setGoals(rs.getInt("goals"));
 					perdto.setAssist(rs.getInt("assist"));
@@ -152,16 +147,12 @@ public class F_Per_RecordDAO {
 		try {
 			
 			conn = getConnection();
-			String sql = "select * from"
-					+ "(select alldata2.*, rownum r from "
-					+ "(SELECT alldata.*, rank() OVER(ORDER BY goals desc) ranked from "
-					+ "(SELECT DISTINCT mem.name, mem.profile, club.tname, per.goals, per.assist, per.played, per.league_num, per.club_num " + 
-					"FROM members mem " + 
-					"INNER JOIN CLUB_CREATE club " + 
-					"ON mem.CLUBNUM = club.CLUBNUM " + 
-					"INNER JOIN F_PERRECORD per " + 
-					"ON club.CLUBNUM = per.CLUB_NUM " + 
-					"WHERE per.LEAGUE_NUM=? and per.club_num=?) alldata)alldata2)where r >= ? and r <= ?";
+			String sql = "SELECT * FROM " + 
+					"(SELECT alldata2.*, rownum r from " + 
+					"(SELECT alldata1.*, rank() over(ORDER BY goals desc) ranked from " + 
+					"(SELECT fper.*, cc.tname FROM " + 
+					"(SELECT * FROM F_PERRECORD WHERE LEAGUE_NUM=? AND CLUB_NUM=?)fper, club_create cc " + 
+					"WHERE cc.CLUBNUM = fper.club_num)alldata1)alldata2) WHERE r >=? AND r<=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, Leauge_num);
 			pstmt.setInt(2, club_num);
@@ -173,8 +164,7 @@ public class F_Per_RecordDAO {
 				allUserList = new ArrayList<F_Per_RecordDTO>();
 				do {
 					F_Per_RecordDTO perdto = new F_Per_RecordDTO();
-					perdto.setName(rs.getString("name"));
-					perdto.setProfile(rs.getString("profile"));
+					perdto.setName(rs.getString("player"));
 					perdto.setTname(rs.getString("tname"));
 					perdto.setGoals(rs.getInt("goals"));
 					perdto.setAssist(rs.getInt("assist"));
@@ -252,5 +242,60 @@ public class F_Per_RecordDAO {
 		}
 		
 		return count;
+	}
+	
+	
+	public void modifyPerRecord(F_Per_RecordDTO perDTO) {
+		Connection conn= null;
+		PreparedStatement pstmt = null;
+		
+		
+		
+		try {
+			conn = getConnection();
+			String sql = "update f_perrecord set played=?, goals=?, assist=? where league_num=? and club_num=? and player=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, perDTO.getPlayed());
+			pstmt.setInt(2, perDTO.getGoals());
+			pstmt.setInt(3, perDTO.getAssist());
+			
+			pstmt.setInt(4, perDTO.getLeague_num());
+			pstmt.setInt(5, perDTO.getClub_num());
+			pstmt.setString(6, perDTO.getName());
+			pstmt.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(pstmt != null) try {pstmt.close();}catch(Exception e) {e.printStackTrace();}
+			if(conn != null) try {conn.close();}catch(Exception e) {e.printStackTrace();}
+		}
+	}
+	
+	public String getProfile(String name, int club_num) {
+		String profile = "";
+		Connection conn= null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = getConnection();
+			String sql = "select profile from members where name=? and clubnum=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setInt(2, club_num);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				profile = rs.getString("profile");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(rs != null) try {rs.close();}catch(Exception e) {e.printStackTrace();}
+			if(pstmt != null) try {pstmt.close();}catch(Exception e) {e.printStackTrace();}
+			if(conn != null) try {conn.close();}catch(Exception e) {e.printStackTrace();}
+		}
+		
+		return profile;
 	}
 }

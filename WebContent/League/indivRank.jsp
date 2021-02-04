@@ -27,7 +27,7 @@
 		pageNum= "1";
 	}
 	int currPage = Integer.parseInt(pageNum);
-	int pageSize = 1;
+	int pageSize = 5;
 	int startRow = (currPage -1) * pageSize +1; 
 	int endRow = currPage * pageSize;			
 	int count = 0;
@@ -45,6 +45,15 @@
 	
 	allTeam = allTeam.substring(0, allTeam.length()-1);
 	List<F_Per_RecordDTO> allMemList = perdao.getPerRecord(League_num,startRow,endRow);
+	for(int i =0; i < allMemList.size();i++) {
+		
+		String profile = perdao.getProfile(allMemList.get(i).getName(), allMemList.get(i).getClub_num());
+		
+		allMemList.get(i).setProfile(profile);
+	}
+		
+		
+		
 	
 	
 		
@@ -57,33 +66,32 @@
 
 <script type= "text/javascript">
 		
-		var page_num = 1;
+		var page_num = 1; // 페이징 처리 위한 번호
 		
-		function pagenum(num) {
-			page_num = num
-			console.log(page_num);
+		function pagenum(num) { // 페이징 a태그 클릭시 그값 페이지번호 서버로 전송
+			page_num = num 
 		}
 		
 		
-		function itemChange() {
-			var select = $('#select1').val();
+		function itemChange() { // 셀렉바뀌엇을때 실행되는  함수
+			var select = $('#select1').val(); // 현재 선택된 셀렉에 벨류값 가져와서 자바스크립트 select 변수에 담기
 			
 			
 			
 			
 			
-			$.ajax({
-				type: 'POST',
-				url: '../League/indivRankPro.jsp',
+			$.ajax({ // 제이쿼리 이용한 ajax 통신시작
+				type: 'POST', // post 방식
+				url: '../League/indivRankPro.jsp', // ajax 통신할 페이지
 				
-				data: { club_num : select, page_num : page_num},
-				success: function(result) {
-					const objs = JSON.parse(result);
-					const page = objs.pop();
+				data: { club_num : select, page_num : page_num}, // club_num 이라는 이름으로 select 변수랑 page_num 변수
+				success: function(result) { // 통신에 성공하면 result라는 변수에 json 형식으로 넘어온 데이터 담기
+					const objs = JSON.parse(result); // json 형태의 데이터를 자바스크립트 객체화 시키는 함수
+					const page = objs.pop(); // json 마지막에 들어온 객체는 페이징처리에 관한것이므로 따로빼줌
 					
-					var html = "";
-					var inputpage = "";
-					for(var i=0; i < objs.length;i++) {
+					var html = ""; // id값 ajaxbody를 가지고있는 div 태그에 들어갈 테이블 태그
+					var inputpage = ""; // 페이징처리를 위한 a태그 나열하기위한 a태그 코드
+					for(var i=0; i < objs.length;i++) { // objs 자바스크립트 객체로 html변수에 코드입력
 						html += '<tr>';
 						html += '<td>' + objs[i].ranked + '</td>';
 						html += '<td>'+ objs[i].tname + '</td>';
@@ -95,22 +103,22 @@
 					}
 					
 					
-					for(var i = page.startPage; i <= page.endPage; i++) {
+					for(var i = page.startPage; i <= page.endPage; i++) { // 페이징처리 
 						inputpage += '<a href=\"#\" onclick=\"pagenum('+i+'); itemChange() \" >' +'  '+i+ '  ' + '</a>';
 					}
 					
-					if(page.endPage < page.pageCount) {
+					if(page.endPage < page.pageCount) { // 다음a태그 나올수잇게하는 페이징처리
 						var start = parseInt(page.startPage);
 						var pageBlock = parseInt(page.pageBlock);
 						inputpage += '<a href=\"#\" onclick=\"pagenum(' +(start + pageBlock) +'); itemChange()\" >' +'다음'+ '</a>';
 					}
 					
 					
-					$('#ajaxtbody').empty();
-					$('#ajaxtbody').append(html);	
+					$('#ajaxtbody').empty(); // ajaxbody 에 있는 내용 싹 지워버리고
+					$('#ajaxtbody').append(html);	// 바뀐 데이터로 div태그 채워준다
 					
-					$('#ajaxpage').empty();
-					$('#ajaxpage').append(inputpage);
+					$('#ajaxpage').empty(); // 페이징처리도 다시 싹 날려주고
+					$('#ajaxpage').append(inputpage); // 바뀐값으로 다시 넣어준다
 					
 				}
 			})
@@ -127,10 +135,10 @@
 		<a href="../League/indivRank.jsp?league_num=<%=League_num%>&category=league">개인기록</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
 		<a href="../League/resultview.jsp?league_num=<%=League_num%>&category=league">경기일정/결과</a>
 	</div>
-	<select id="select1" onchange="pagenum(1); itemChange()">
-		<option value="<%=League_num%>,<%=allTeam%>">전체선수</option>
-		<%for(int i=0; i < allList.size();i++) {
-			Club_CreateDTO listdto = allList.get(i);%>
+	<select id="select1" onchange="pagenum(1); itemChange()">  <!-- onchange 가 되면 pagenum(), itemChange() 함수 실행 -->
+		<option value="<%=League_num%>,<%=allTeam%>">전체선수</option> <!-- 전체선수이므로 리그번호와 전체선수목록 스트링에 -->
+		<%for(int i=0; i < allList.size();i++) {					// 담아서 벨류값으로 서버로 송신	
+			Club_CreateDTO listdto = allList.get(i);%> <!-- 밑에 옵션은 그 팀 선택됏을때 리그번호, 클럽번호, 팀이름 서버로 넘김 -->
 			<option value="<%=League_num%>,<%=listdto.getClubNum()%>"><%=listdto.gettName() %></option>
 		<%}%>
 	</select>
@@ -146,7 +154,7 @@
 					<th>도움</th>
 				</tr>
 			</thead>
-			<tbody id="ajaxtbody">
+			<tbody id="ajaxtbody">  <!-- 바뀐 데이터가 들어갈곳 -->
 				<%for(int i=0; i < allMemList.size();i++) {
 					F_Per_RecordDTO perdto = allMemList.get(i);%>
 					<tr>
@@ -154,7 +162,7 @@
 						
 						<td><%=perdto.getTname() %></td> 
 						<td width="300px">
-							<img width="63px" height="88px" src="/woodley/save/<%=perdto.getProfile()%>" /> 
+							<img width="63px" height="88px" src="/woodley/save/<%=perdto.getProfile()%>" />
 							<%=perdto.getName() %>
 						</td>
 						<td><%=perdto.getPlayed() %></td>
@@ -166,17 +174,12 @@
 		</table>
 		<% 
 			int pageCount = count / pageSize + (count % pageSize == 0 ? 0 : 1);
-			// 보여줄 페이지 번호의 개수 지정
-			int pageBlock = 5;	// 5
-			// 현재 위치한 페이지에서 페이지뷰어 첫번째 숫자가 무엇인지 찾기.
+			int pageBlock = 5;	
 			int startPage = (int)((currPage - 1)/pageBlock) * pageBlock + 1;
-			// 현재 위치한 페이지에서 페이지뷰어 마지막 숫자가 무엇인지 찾기
 			int endPage = startPage + pageBlock - 1;
-			// 마지막에 보여지는 페이지 뷰어에, 페이지 개수가 10개 미만일 경우
-			// 마지막 페이지 번호가 (endPage)가 총 페이지 수가 되게 만들어줌.
+			
 			if(endPage > pageCount) endPage = pageCount;%> 
-			<div id="ajaxpage" align="center"><% 
-				// 앞으로 가는 기호(11~20 보고 있을때 1~10으로 이동하는 버튼)
+			<div id="ajaxpage" align="center"><%  // 페이징 처리 다시 그릴수있게 id값 주기
 				if(startPage > pageBlock) {%>
 					<a href="../League/indivRank.jsp?league_num=<%=League_num%>&pageNum=<%=startPage - pageBlock %>&category=league"> 이전 </a>
 		  	  <%}

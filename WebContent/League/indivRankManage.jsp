@@ -44,6 +44,12 @@
 	
 	allTeam = allTeam.substring(0, allTeam.length()-1);
 	List<F_Per_RecordDTO> allMemList = perdao.getPerRecord(League_num,startRow,endRow);
+	for(int i =0; i < allMemList.size();i++) {
+		
+		String profile = perdao.getProfile(allMemList.get(i).getName(), allMemList.get(i).getClub_num());
+		
+		allMemList.get(i).setProfile(profile);
+	}
 	
 	
 		
@@ -64,43 +70,54 @@
 	<div align="center">
 		<a href="../League/modifyLeague.jsp?league_num=<%=League_num%>&category=league">리그 정보 수정</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
 		<a href="../League/schedulemanage.jsp?league_num=<%=League_num%>&category=league">경기일정/결과 관리</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
-		<a>개인기록 관리</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
+		<a href="../League/indivRankManage.jsp?league_num=<%=League_num%>&category=league">개인기록 관리</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
 		<a href="../League/manageLeagueTeam.jsp?league_num=<%=League_num%>&category=league">리그참가팀관리</a>
 	</div>
 	
 	<br/><br/>
-	
-	<table class="table" style="text-align: center; border: 1px solid #dddddd;">
-			<thead style="background-color: #90CAF9; text-align: center">
-				<tr>
-					<th>순위</th>
-					<th>팀</th>
-					<th>선수</th>
-					<th>경기수</th>
-					<th>득점</th>
-					<th>도움</th>
-				</tr>
-			</thead>
-			<tbody>
-				<%for(int i=0; i < allMemList.size();i++) {
-					F_Per_RecordDTO perdto = allMemList.get(i);%>
+	<form action="indivRankManagePro.jsp" method="post" >
+		<input type="hidden" name="league_num" value="<%=League_num%>">
+		<table class="table" style="text-align: center; border: 1px solid #dddddd;">
+				<thead style="background-color: #90CAF9; text-align: center">
 					<tr>
-						<td><%=perdto.getRanked() %></td>
-						
-						<td><%=perdto.getTname() %></td> 
-						<td width="300px">
-							<img width="63px" height="88px" src="/woodley/save/<%=perdto.getProfile()%>" /> 
-							<%=perdto.getName() %>
-						</td>
-						<td>
-							<input type="text" name="played" value="<%=perdto.getPlayed() %>" />
-						</td>
-						<td><input type="text" name="goals" value="<%=perdto.getGoals() %>" /></td>
-						<td><input type="text" name="assist" value="<%=perdto.getAssist() %>" /></td>
+						<th>순위</th>
+						<th>팀</th>
+						<th>선수</th>
+						<th>경기수</th>
+						<th>득점</th>
+						<th>도움</th>
 					</tr>
-				<%}%>
-			</tbody>	
-		</table>
+				</thead>
+				<tbody>
+					<%for(int i=0; i < allMemList.size();i++) {
+						F_Per_RecordDTO perdto = allMemList.get(i);%>
+						<input type="hidden" name="names" value="<%=perdto.getName()%>" />
+						<input type="hidden" name="clubNum" value="<%=perdto.getClub_num()%>" />
+						<tr>
+							<td><%=perdto.getRanked() %></td>
+							
+							<td><%=perdto.getTname() %></td> 
+							<td width="300px">
+								<img width="63px" height="88px" src="/woodley/save/<%=perdto.getProfile()%>" /> 
+								<%=perdto.getName() %>
+							</td>
+							<td>
+								<input type="text" name="played" value="<%=perdto.getPlayed() %>" />
+							</td>
+							<td><input type="text" name="goals" value="<%=perdto.getGoals() %>" /></td>
+							<td><input type="text" name="assist" value="<%=perdto.getAssist() %>" /></td>
+						</tr>
+					<%}%>
+						<tr>
+							<td colspan="6">
+								<input class="btn btn-primary" type="submit" value="개인기록 입력" />
+								
+							</td>
+						</tr>
+						
+				</tbody>	
+			</table>
+		</form>
 		<% 
 			int pageCount = count / pageSize + (count % pageSize == 0 ? 0 : 1);
 			// 보여줄 페이지 번호의 개수 지정

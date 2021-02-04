@@ -1,3 +1,4 @@
+<%@page import="woodley.main.bcity.B_CityDAO"%>
 <%@page import="woodley.main.member.MemberDTO"%>
 <%@page import="woodley.football.league.F_Per_RecordDTO"%>
 <%@page import="java.util.List"%>
@@ -26,6 +27,8 @@
 	String enc = "UTF-8";
 	DefaultFileRenamePolicy dp = new DefaultFileRenamePolicy();
 	MultipartRequest mr = new MultipartRequest(request, path, max, enc, dp);
+	B_CityDAO b_cityDAO = B_CityDAO.getInstance();
+	String b_cityname = b_cityDAO.getbcityname(Integer.parseInt(mr.getParameter("location1")));
 	
 	
 	
@@ -33,9 +36,10 @@
 	dto.setLeague_name(mr.getParameter("league_name"));
 	dto.setPeriod(mr.getParameter("period1") + " ~ " + mr.getParameter("period2"));
 	dto.setJointeam(Integer.parseInt(mr.getParameter("jointeam")));
-	dto.setLocation(mr.getParameter("location"));
+	dto.setLocation(b_cityname +"-"+ mr.getParameter("location2"));
 	dto.setBanner(mr.getFilesystemName("banner"));
 	dto.setContent(mr.getParameter("content"));
+	
 	
 	
 	

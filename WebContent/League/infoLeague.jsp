@@ -20,7 +20,7 @@
 	
 	if(session.getAttribute("memId") == null) { %>
 		<script>
-			alert("비정상적인 접근입니다!");
+			alert("로그인이 필요한페이지입니다!");
 			location="../main/main.jsp";
 		</script>	
 			

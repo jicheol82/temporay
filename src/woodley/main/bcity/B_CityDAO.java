@@ -55,5 +55,32 @@ public class B_CityDAO {
 		return dtoList;
 	}
 	
+	public String getbcityname(int b_city_num) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String cityname = "";
+		try {
+			conn = getConnection();
+			String sql = "select city_name from b_city where city_num=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_city_num);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				cityname = rs.getString("city_name");
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(conn, pstmt, rs);
+		}
+		
+		
+		
+		return cityname;
+	}
+	
 	
 }

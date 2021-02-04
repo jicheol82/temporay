@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="woodley.main.bcity.B_CityDTO"%>
+<%@page import="woodley.main.bcity.B_CityDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -11,6 +14,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../css/bootstrap.css">
 	<link rel="stylesheet" href="../css/custom.css">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript">
 		function inputcheck() {
 			
@@ -23,7 +27,10 @@
 				alert("리그명을 입력하세요");
 				return false;
 			}
-			
+			if(isNaN(jointeam)) {
+				alert("참가팀은 숫자만 입력가능합니다");
+				return false;
+			}
 			if(date1 == "") {
 				alert("시작날짜를 입력하세요");
 				return false;
@@ -46,6 +53,9 @@
 		function minus() {
 			var jointeam = $('#jointeam').val();
 			jointeam--;
+			if(jointeam < 0) {
+				jointeam = 0;
+			}
 			$('#jointeam').val(jointeam);
 		}
 		function pluss() {
@@ -61,6 +71,8 @@
 <%
 	String id = request.getParameter("creater");
 	int club_num = Integer.parseInt(request.getParameter("club_num"));
+	B_CityDAO cityDAO = B_CityDAO.getInstance();
+	List b_cityList = cityDAO.callBcity();
 	
 %>
 
@@ -88,12 +100,29 @@
 				
 				<tr>
 					<td style="width: 110px;"><h5>참가팀수</h5></td> 
-					<td colspan="3""><input class="jointeam-input" readonly id="jointeam" value="1" type="text" name="jointeam" style="float: left;" /><button class="btn btn-primary" onclick="minus()" type="button" style="float: right;">-</button ><button class="btn btn-primary" onclick="pluss()" type="button" style="float: right;">+</button></td>
+					<td colspan="3"><input class="jointeam-input" id="jointeam" value="1" type="text" name="jointeam" style="float: left;" /><button class="btn btn-primary" onclick="minus()" type="button" style="float: right;">-</button ><button class="btn btn-primary" onclick="pluss()" type="button" style="float: right;">+</button></td>
 				</tr>
 					
 				<tr>
-					<td style="width: 110px;"><h5> 지역 </h5></td>
-					<td><input class="form-control" type="text" name="location" /></td>
+					<td style="width: 110px;"><h5> 대도시 선택 </h5></td>
+					<td>
+						<select class="form-control" name="location1" id="select1" onchange="itemChange()">
+							
+							<%for(int i =0; i < b_cityList.size();i++) {
+								B_CityDTO dto = (B_CityDTO)b_cityList.get(i);%>
+								<option value="<%=dto.getCity_num()%>"><%=dto.getCity_name() %></option>
+	   						<%}%>
+						</select>
+					
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110px;"><h5> 소도시 선택 </h5></td>
+					<td>
+						<select class="form-control" name="location2" id="select2">
+							<option>선택</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<td style="width: 110px;"><h5> 리그배너 </h5></td>
@@ -115,7 +144,28 @@
 	</div>
 </body>
 </html>
+<script type= "text/javascript">
+		function itemChange() {
+			var select = $('#select1').val();
+			$.ajax({
+				type: 'POST',
+				url: '../main/scityPro.jsp',
+				data: { b_citynum: select},
+				success: function(result) {
+					const objs = JSON.parse(result);
+					console.log(objs);
 					
+					$('#select2').empty();
+					
+					for(name in objs) {
+						var option = $("<option>" + objs[name] + "</option>");
+						$('#select2').append(option);
+					}
+					
+				}
+			})
+		}
+</script>					
 					
 			
 			

@@ -13,6 +13,7 @@
 </head>
 	<link rel="stylesheet" href="../css/bootstrap.css">
 	<link rel="stylesheet" href="../css/custom.css">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <%
 	request.setCharacterEncoding("UTF-8");
 	int league_num = Integer.parseInt(request.getParameter("league_num"));

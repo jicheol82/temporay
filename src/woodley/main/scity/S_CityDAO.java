@@ -44,8 +44,16 @@ public class S_CityDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, city_num);
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				cityList.add(rs.getString("s_cityname"));
+			
+			if(rs.next()) {
+				do {
+					S_CityDTO dto = new S_CityDTO();
+					dto.setB_cityNum(rs.getInt("b_citynum"));
+					dto.setS_cityName(rs.getString("s_cityname"));
+					dto.setS_cityNum(rs.getInt("s_citynum"));
+					cityList.add(dto);
+					
+				}while(rs.next());
 			}
 		}catch(Exception e) {
 			e.printStackTrace();

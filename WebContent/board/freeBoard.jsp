@@ -7,7 +7,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-	<link rel="stylesheet" href="../css/bootstrap.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css">
 <title>자유게시판</title>
 <%
 	String event = request.getParameter("event");

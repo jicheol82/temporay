@@ -26,7 +26,7 @@
 	<div align="center">
 	<a href="../League/modifyLeague.jsp?league_num=<%=League_num%>&category=league">리그 정보 수정</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
 	<a href="../League/schedulemanage.jsp?league_num=<%=League_num%>&category=league">경기일정/결과 관리</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
-	<a>개인기록 관리</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
+	<a href="../League/indivRankManage.jsp?league_num=<%=League_num%>&category=league">개인기록 관리</a><%for(int i =0; i < 10;i++) {%> &nbsp; <% }%>
 	<a href="../League/manageLeagueTeam.jsp?league_num=<%=League_num%>&category=league">리그참가팀관리</a>
 	</div>
 	<br/><br/><br/>

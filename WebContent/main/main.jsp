@@ -27,8 +27,8 @@
 <script>
 	function check(){
 		var inputs = document.inputForm;
-		if(!inputs.location.value||!inputs.ing.value){
-			alert("지역이나 진행상황을 선택해주세요");
+		if(!inputs.search.value){
+			alert("검색어를 입력하세요");
 			return false;
 		}
 	}
@@ -63,7 +63,7 @@
 							aria-haspopup="true" aria-expanded="false">축구<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="../club/findClub.jsp?event=<%=event%>&category=club">동호회</a></li>
-							<li><a href="../League/findLeague.jsp?event=<%=event%>&category=league">리그</a></li>
+							<li><a href="../League/findLeague2.jsp?event=<%=event%>&category=league">리그</a></li>
 							<li><a href="../FMatch/findFMatch.jsp?event=<%=event%>&category=fmatch">친선경기</a></li>
 							<li><a href="../board/noticeBoard.jsp?evnet=<%=event%>&category=comboard">커뮤니티</a></li>
 						</ul>
@@ -109,13 +109,13 @@
 						</ul>
 					</li>
 				</ul>
-				<form action="../League/findLeague.jsp" method="get" name="inputForm" class="navbar-form navbar-left" onsubmit="return check()">
+				<form action="../League/findLeague2.jsp" method="get" name="inputForm" class="navbar-form navbar-left" onsubmit="return check()">
 					<input type="hidden" name="event" value="football"/>
 					<input type="hidden" name="category" value="league"/>
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="리그명검색" name='search'/>
 					</div>
-					<button type="submit" class="btn btn-default">리그검색</button>
+					<input type="submit" class="btn btn-default" value="리그검색"/>
 				</form>
 				<ul class="nav navbar-nav navbar-right">
 					<%if(session.getAttribute("memId") == null) { %>

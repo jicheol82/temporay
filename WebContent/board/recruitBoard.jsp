@@ -11,7 +11,7 @@
 <title>모집게시판</title>
 <link rel="stylesheet" href="../css/bootstrap.css">
 <script>
-	function check(){
+	function check1(){
 		var input = document.search;
 		if(input.sel.value=="" || input.search.value==""){
 			alert("검색범위와 검색어를 입력해주세요.");
@@ -169,7 +169,7 @@
 <%
 		}
 %>
-		<form action="../board/recruitBoard.jsp?" name="search" onsubmit="return check()">
+		<form action="../board/recruitBoard.jsp?" name="search" onsubmit="return check1()">
 			<input type="hidden" name="event" value="football"/>
 			<input type="hidden" name="category" value="comboard"/>
 			<select name="sel">

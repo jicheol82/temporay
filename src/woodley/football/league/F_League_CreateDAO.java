@@ -10,6 +10,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import woodley.football.fmatch.FMatchDTO;
+
 public class F_League_CreateDAO {
 	
 	private static F_League_CreateDAO instance = new F_League_CreateDAO();
@@ -104,8 +106,6 @@ public class F_League_CreateDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<F_League_CreateDTO> allList = null;
-		
-		
 		try {
 			
 			conn = getConnection();
@@ -177,8 +177,113 @@ public class F_League_CreateDAO {
 		
 		return max;
 	}
+	//메인에서 검색어만 입력했을때
+	public List getF_League_List(String search) {
+		List searchList = null;
+		F_League_CreateDTO dto = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			searchList = new ArrayList();
+			conn = getConnection();
+			String sql = "SELECT * FROM F_league WHERE league_name LIKE '%"+search+"%' order by reg";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				dto = new F_League_CreateDTO();
+				dto.setLeague_num(rs.getInt("League_num"));
+				dto.setLeague_name(rs.getString("League_name"));
+				dto.setJointeam(rs.getInt("jointeam"));
+				dto.setPeriod(rs.getString("period"));
+				dto.setLeagueing(rs.getInt("leagueing"));
+				dto.setCreater(rs.getString("creater"));
+				dto.setContent(rs.getString("content"));
+				dto.setLocation(rs.getString("location"));
+				dto.setBanner(rs.getString("banner"));
+				dto.setReg(rs.getTimestamp("reg"));
+				searchList.add(dto);
+			}
+		}catch(Exception e) {e.printStackTrace();}
+		finally {
+			if(rs != null) try { rs.close();}catch(Exception e) { e.printStackTrace(); }
+			if(pstmt != null) try { pstmt.close();}catch(Exception e) { e.printStackTrace(); }
+			if(conn != null) try { conn.close();}catch(Exception e) { e.printStackTrace(); }
+		}
+		return searchList;
+	}
 	
-	
+	// 리그 검색(1. 지역 &이름)
+	public List getF_League_List(String location, String search) {
+		List searchList = null;
+		F_League_CreateDTO dto = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			searchList = new ArrayList();
+			conn = getConnection();
+			String sql = "select * from (SELECT * FROM F_league WHERE location LIKE '%"+location+"%') WHERE league_name LIKE '%"+search+"%' order by reg";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				dto = new F_League_CreateDTO();
+				dto.setLeague_num(rs.getInt("League_num"));
+				dto.setLeague_name(rs.getString("League_name"));
+				dto.setJointeam(rs.getInt("jointeam"));
+				dto.setPeriod(rs.getString("period"));
+				dto.setLeagueing(rs.getInt("leagueing"));
+				dto.setCreater(rs.getString("creater"));
+				dto.setContent(rs.getString("content"));
+				dto.setLocation(rs.getString("location"));
+				dto.setBanner(rs.getString("banner"));
+				dto.setReg(rs.getTimestamp("reg"));
+				searchList.add(dto);
+			}
+		}catch(Exception e) {e.printStackTrace();}
+		finally {
+			if(rs != null) try { rs.close();}catch(Exception e) { e.printStackTrace(); }
+			if(pstmt != null) try { pstmt.close();}catch(Exception e) { e.printStackTrace(); }
+			if(conn != null) try { conn.close();}catch(Exception e) { e.printStackTrace(); }
+		}
+		return searchList;
+	}
+	// 리그 검색(2. 진행상황 &이름)
+	public List getF_League_List(int ing, String search) {
+		List searchList = null;
+		F_League_CreateDTO dto = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			searchList = new ArrayList();
+			conn = getConnection();
+			String sql = "select * from (SELECT * FROM F_league WHERE leagueing=?) WHERE league_name LIKE '%"+search+"%' order by reg";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ing);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				dto = new F_League_CreateDTO();
+				dto.setLeague_num(rs.getInt("League_num"));
+				dto.setLeague_name(rs.getString("League_name"));
+				dto.setJointeam(rs.getInt("jointeam"));
+				dto.setPeriod(rs.getString("period"));
+				dto.setLeagueing(rs.getInt("leagueing"));
+				dto.setCreater(rs.getString("creater"));
+				dto.setContent(rs.getString("content"));
+				dto.setLocation(rs.getString("location"));
+				dto.setBanner(rs.getString("banner"));
+				dto.setReg(rs.getTimestamp("reg"));
+				searchList.add(dto);
+			}
+		}catch(Exception e) {e.printStackTrace();}
+		finally {
+			if(rs != null) try { rs.close();}catch(Exception e) { e.printStackTrace(); }
+			if(pstmt != null) try { pstmt.close();}catch(Exception e) { e.printStackTrace(); }
+			if(conn != null) try { conn.close();}catch(Exception e) { e.printStackTrace(); }
+		}
+		return searchList;
+	}
 	
 	public F_League_CreateDTO getInfoLeague(int num) { // 리그 정보가져오기
 		Connection conn = null;

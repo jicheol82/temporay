@@ -13,6 +13,17 @@
 
 <title>Find League</title>
  
+ <script>
+	function check(){
+		var inputs = document.searchForm;
+		Console.log("test");
+		if(!inputs.location.value||!inputs.ing.value){
+			alert("지역 또는 진행상황을 입력하세요");
+			return false;
+		}
+	}
+</script>
+ 
 </head>
 <%	
 	// url 접근 방지
@@ -57,12 +68,19 @@
 	
 	
 	// 검색조건
-	if(location == null && ing == null && search == null) { // 아무조건없을때 불러오기 //모든 글 불러오기
+	if(location == null && ing == null) { // 아무조건없을때 불러오기 //모든 글 불러오기
+		
 		leagueList = dao.getF_League_List(startRow, endRow);
-	}else if(location != null && ing == null && search == null) { // 지역만 검색했을때
-		leagueList = dao.getF_League_List(startRow, endRow, location);	
-	}else if(location == null && ing != null && search == null) { // 모집중 만 선택했을때 
-		leagueList = dao.getF_League_List(startRow, endRow, ing);
+		if(search!=null){
+			System.out.println("검색어만 넣었ㅎ을때");
+			leagueList = dao.getF_League_List(search);
+		}
+	}else if(location != null && ing == null) { // 지역만 검색했을때
+		System.out.println("지역 검색어");
+		leagueList = dao.getF_League_List(location, search);	
+	}else if(location == null && ing != null) { // 모집중 만 선택했을때
+		System.out.println("진행 검색어");
+		leagueList = dao.getF_League_List(Integer.parseInt(ing), search);
 	}
 	
 	
@@ -146,16 +164,18 @@
 	  <% } // else문 안의 if 문 끝
 	 } // else 문 끝%>
 	 <div align="center">
-		<form action="findLeague.jsp?pageNum=<%=pageNum%>" name="search">
+		<form action="../League/findLeague.jsp?" method="get" name="searchForm" onsubmit="return check()">
+			<input type="hidden" name="pageNum" value="<%=pageNum%>" />
+			<input type="hidden" name="category" value="league" />
 			지역 : <input type="text" name="location" />
-			상태 		<select>
-						<option>선택안함</option>
+			상태 		<select name="ing">
+						<option value="">선택안함</option>
 						<option value="0">모집중</option>
 						<option value="1">진행중</option>
 						<option value="2">종료</option>
 					</select>
 			리그이름 : <input type="text" name="search" />
-			<input type="submit" value="검색" name="search" />
+			<input type="submit" value="검색"/>
 		</form>
 	</div>
 		

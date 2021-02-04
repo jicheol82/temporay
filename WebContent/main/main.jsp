@@ -18,19 +18,21 @@
 	if(event == null) {
 		event = "football";
 	}
-	
 	String category = request.getParameter("category");
 	if(category == null) {
 		category = "main";
 	}
-	
-	
 	String id = (String)session.getAttribute("memId");
-	
-	
-	 
 %>
-
+<script>
+	function check(){
+		var inputs = document.inputForm;
+		if(!inputs.location.value||!inputs.ing.value){
+			alert("지역이나 진행상황을 선택해주세요");
+			return false;
+		}
+	}
+</script>
 </head>
 <body>
 	<style type="text/css" >
@@ -107,7 +109,7 @@
 						</ul>
 					</li>
 				</ul>
-				<form action="../League/findLeague.jsp" method="get" class="navbar-form navbar-left">
+				<form action="../League/findLeague.jsp" method="get" name="inputForm" class="navbar-form navbar-left" onsubmit="return check()">
 					<input type="hidden" name="event" value="football"/>
 					<input type="hidden" name="category" value="league"/>
 					<div class="form-group">

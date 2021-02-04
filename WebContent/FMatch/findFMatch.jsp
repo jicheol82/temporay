@@ -47,8 +47,8 @@
 		//System.out.println(sdf.format(date.toString()));
 		int year = date.getYear();
 		int month = date.getMonthValue();
-		fromDate = year+"-"+(month<10?"0"+month:month);
-		toDate = year+"-"+((month+1)<10?"0"+(month+1):(month+1));
+		fromDate = year+"-"+(month<10?"0"+month:month)+"-1";
+		toDate = year+"-"+((month+1)<10?"0"+(month+1):(month+1))+"-"+date.lengthOfMonth();
 		list = dao.findFMatch(fromDate, toDate, "");
 	}else if(selectDate!="" && fromDate==""){
 		//날짜가 선택됐을때

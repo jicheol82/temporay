@@ -194,6 +194,7 @@ public class F_League_CreateDAO {
 				dto = new F_League_CreateDTO();
 				dto.setLeague_num(rs.getInt("League_num"));
 				dto.setLeague_name(rs.getString("League_name"));
+				System.out.println(rs.getString("League_name"));
 				dto.setJointeam(rs.getInt("jointeam"));
 				dto.setPeriod(rs.getString("period"));
 				dto.setLeagueing(rs.getInt("leagueing"));
@@ -203,6 +204,7 @@ public class F_League_CreateDAO {
 				dto.setBanner(rs.getString("banner"));
 				dto.setReg(rs.getTimestamp("reg"));
 				searchList.add(dto);
+				System.out.println("성공");
 			}
 		}catch(Exception e) {e.printStackTrace();}
 		finally {

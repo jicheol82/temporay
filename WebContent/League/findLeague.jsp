@@ -13,16 +13,7 @@
 
 <title>Find League</title>
  
- <script>
-	function check(){
-		var inputs = document.searchForm;
-		Console.log("test");
-		if(!inputs.location.value||!inputs.ing.value){
-			alert("지역 또는 진행상황을 입력하세요");
-			return false;
-		}
-	}
-</script>
+ 
  
 </head>
 <%	
@@ -68,19 +59,23 @@
 	
 	
 	// 검색조건
+	
 	if(location == null && ing == null) { // 아무조건없을때 불러오기 //모든 글 불러오기
-		
+		// 처음 모든 글 불러오기
 		leagueList = dao.getF_League_List(startRow, endRow);
 		if(search!=null){
-			System.out.println("검색어만 넣었ㅎ을때");
+			// 메인에서 검색만 했을 때
 			leagueList = dao.getF_League_List(search);
 		}
-	}else if(location != null && ing == null) { // 지역만 검색했을때
+	}else if(location != null && ing == "") { // 지역만 검색했을때
 		System.out.println("지역 검색어");
 		leagueList = dao.getF_League_List(location, search);	
-	}else if(location == null && ing != null) { // 모집중 만 선택했을때
+	}else if(location == null && ing != "") { // 모집중 만 선택했을때
 		System.out.println("진행 검색어");
 		leagueList = dao.getF_League_List(Integer.parseInt(ing), search);
+	}else if(location == null && ing == ""){
+		System.out.println("3번째검색어");
+		leagueList = dao.getF_League_List(search);
 	}
 	
 	
@@ -164,7 +159,7 @@
 	  <% } // else문 안의 if 문 끝
 	 } // else 문 끝%>
 	 <div align="center">
-		<form action="../League/findLeague.jsp?" method="get" name="searchForm" onsubmit="return check()">
+		<form action="../League/findLeague.jsp?" method="get" name="inputForm">
 			<input type="hidden" name="pageNum" value="<%=pageNum%>" />
 			<input type="hidden" name="category" value="league" />
 			지역 : <input type="text" name="location" />

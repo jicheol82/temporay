@@ -10,10 +10,9 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="../css/bootstrap.css">
-
+<script src="../js/bootstrap.js"></script>
+<script src="https://code.jquery.com/jquar-3.1.1.min.js"></script>
 <title>Find League</title>
- 
- 
  
 </head>
 <%	
@@ -49,34 +48,19 @@
 	F_League_CreateDAO dao = F_League_CreateDAO.getInstance();
 	List<F_League_CreateDTO> leagueList = null;
 	count = dao.LeagueCount(); // 총 글 몇개인지 확인
-	// 검색 키워드
 	
-	String location = request.getParameter("location");
-	if("".equals(location)) location = null; 
-	String ing = request.getParameter("ing");
+	
+	
 	String search = request.getParameter("search");
-	if("".equals(search)) search = null;
 	
-	
-	// 검색조건
-	
-	if(location == null && ing == null) { // 아무조건없을때 불러오기 //모든 글 불러오기
-		// 처음 모든 글 불러오기
+	if(search == null) {
 		leagueList = dao.getF_League_List(startRow, endRow);
-		if(search!=null){
-			// 메인에서 검색만 했을 때
-			leagueList = dao.getF_League_List(search);
-		}
-	}else if(location != null && ing == "") { // 지역만 검색했을때
-		System.out.println("지역 검색어");
-		leagueList = dao.getF_League_List(location, search);	
-	}else if(location == null && ing != "") { // 모집중 만 선택했을때
-		System.out.println("진행 검색어");
-		leagueList = dao.getF_League_List(Integer.parseInt(ing), search);
-	}else if(location == null && ing == ""){
-		System.out.println("3번째검색어");
-		leagueList = dao.getF_League_List(search);
+	}else {
+		leagueList = dao.searchLeague(startRow, endRow, search);
+		count = dao.LeagueCount(search);
 	}
+	
+	
 	
 	
 %>
@@ -137,8 +121,13 @@
 			if(startPage > pageBlock) {%>
 				<a href="../League/findLeague.jsp?pageNum=<%=startPage - pageBlock %>&category=league"> 이전 </a>
 		  <%}
-		    for(int i = startPage; i <= endPage; i++) { %>
-		    	<a href="../League/findLeague.jsp?category=league&pageNum=<%= i%>&category=league"> &nbsp;<%= i %> &nbsp; </a>
+			if(search == null) {
+			    for(int i = startPage; i <= endPage; i++) { %>
+			    	<a href="../League/findLeague.jsp?category=league&pageNum=<%= i%>&category=league"> &nbsp;<%= i %> &nbsp; </a>
+			  <%}
+			}else {
+				for(int i = startPage; i <= endPage; i++) { %>
+					<a href="../League/findLeague.jsp?search=<%=search %>&category=league&pageNum=<%= i%>&category=league"> &nbsp;<%= i %> &nbsp; </a>
 		  <%}
 		    if(endPage < pageCount) { %>
 		    	<a href="../League/findLeague.jsp?pageNum=<%= startPage+pageBlock %>&category=league"> 다음</a>
@@ -157,22 +146,9 @@
 			</form>	
 		</div>
 	  <% } // else문 안의 if 문 끝
-	 } // else 문 끝%>
-	 <div align="center">
-		<form action="../League/findLeague.jsp?" method="get" name="inputForm">
-			<input type="hidden" name="pageNum" value="<%=pageNum%>" />
-			<input type="hidden" name="category" value="league" />
-			지역 : <input type="text" name="location" />
-			상태 		<select name="ing">
-						<option value="">선택안함</option>
-						<option value="0">모집중</option>
-						<option value="1">진행중</option>
-						<option value="2">종료</option>
-					</select>
-			리그이름 : <input type="text" name="search" />
-			<input type="submit" value="검색"/>
-		</form>
-	</div>
+	 } // else 문 끝
+	 }%>
+	 
 		
 	
 </body>

@@ -1,0 +1,32 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+* {
+	font-family: 'Nanum Gothic';
+}
+a {
+	color: #000000;
+	text-decoration: none;
+}
+a:hover {
+	color: #bbbbbb;
+	text-decoration: none;
+	cusor: pointer;
+}
+/* 네비게이션 영역 */
+.navbar-default { /*배경 색상 */
+	background-color: #90CAF9;
+	border-color: #000000;
+}
+.navbar-default .navbar-brand { /* 네비게이션 제목 색상 */
+	color: #000000;
+}
+
+.navbar-default .navbar-nav > li > a {
+	color: black;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+	color: #000000;
+	background-color: #FF6F00;
+}

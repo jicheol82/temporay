@@ -19,6 +19,9 @@
 <%	
 	}
 %>
+<script>
+	opener.document.location.reload();
+</script>
 <%
 	request.setCharacterEncoding("utf-8");
 	String id = (String)session.getAttribute("memId");
@@ -105,7 +108,7 @@
 <%							
 						}
 %>
-						<input type="button" value="취소" onclick="window.close()"></td>
+						<input type="button" value="닫기" onclick="window.close()"></td>
 					</tr>
 				</table>
 			</form>

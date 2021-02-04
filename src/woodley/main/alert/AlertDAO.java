@@ -92,7 +92,7 @@ public class AlertDAO {
 			String sql;
 			boolean result = false;
 			if("match".equals(request) && state==1) {	// 수락한 경우에만 fmatch db에 state를 변경한다
-				result = FMatchDAO.getInstance().changeState(ref);
+				FMatchDAO.getInstance().changeState(ref);
 			}else if(false) {	// 수락한 경우에만 해당 request db에 state를 변경한다
 				// 동호회 참가 요청
 			}else if(false) {	// 수락한 경우에만 해당 request db에 state를 변경한다
@@ -102,7 +102,7 @@ public class AlertDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, state);
 			pstmt.setInt(2, num);
-			if(pstmt.executeUpdate()>0 && result) {return true;}
+			if(pstmt.executeUpdate()>0) {return true;}
 		}catch(Exception e) {e.printStackTrace();}
 		finally {close(conn, pstmt, null);}
 		return false;

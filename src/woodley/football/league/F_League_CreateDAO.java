@@ -280,6 +280,39 @@ public class F_League_CreateDAO {
 		}
 	}
 	
-	
+	public List<F_League_CreateDTO> mainviewList() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<F_League_CreateDTO> leagueList = null;
+
+		try {
+
+			conn = getConnection();
+			String sql = "select * from (select fl2.*, rownum r from "
+					+ "(select fl.league_num, fl.league_name, fl.banner from f_league fl order by reg desc)fl2) where r>=1 and r <= 8";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			if(rs.next()) {
+				leagueList = new ArrayList<F_League_CreateDTO>();
+				do {
+					F_League_CreateDTO dto = new F_League_CreateDTO();
+					dto.setLeague_name(rs.getString("league_name"));
+					dto.setBanner(rs.getString("banner"));
+					dto.setLeague_num(rs.getInt("league_num"));
+					leagueList.add(dto);
+				}while(rs.next());
+			}
+
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(rs != null) try { rs.close();}catch(Exception e) { e.printStackTrace(); }
+			if(pstmt != null) try { pstmt.close();}catch(Exception e) { e.printStackTrace(); }
+			if(conn != null) try { conn.close();}catch(Exception e) { e.printStackTrace(); }
+		}
+		return leagueList;
+	}
 			
 }

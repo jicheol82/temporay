@@ -1,4 +1,7 @@
 <%@page import="sun.misc.Perf.GetPerfAction"%>
+<%@page import="woodley.football.league.F_League_CreateDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="woodley.football.league.F_League_CreateDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -23,6 +26,8 @@
 		category = "main";
 	}
 	String id = (String)session.getAttribute("memId");
+	F_League_CreateDAO dao = F_League_CreateDAO.getInstance();
+	List<F_League_CreateDTO> mainList = dao.mainviewList();
 %>
 <script>
 	function check(){
@@ -63,7 +68,7 @@
 							aria-haspopup="true" aria-expanded="false">축구<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="../club/findClub.jsp?event=<%=event%>&category=club">동호회</a></li>
-							<li><a href="../League/findLeague2.jsp?event=<%=event%>&category=league">리그</a></li>
+							<li><a href="../League/findLeague.jsp?event=<%=event%>&category=league&location=&ing=-1&search=">리그</a></li>
 							<li><a href="../FMatch/findFMatch.jsp?event=<%=event%>&category=fmatch">친선경기</a></li>
 							<li><a href="../board/noticeBoard.jsp?evnet=<%=event%>&category=comboard">커뮤니티</a></li>
 						</ul>
@@ -109,9 +114,12 @@
 						</ul>
 					</li>
 				</ul>
-				<form action="../League/findLeague2.jsp" method="get" name="inputForm" class="navbar-form navbar-left" onsubmit="return check()">
+				<form action="../League/findLeague.jsp" method="get" name="inputForm" class="navbar-form navbar-left" onsubmit="return check()">
 					<input type="hidden" name="event" value="football"/>
 					<input type="hidden" name="category" value="league"/>
+					<input type="hidden" name="location" />
+					<input type="hidden" name="ing" value="-1" />
+					
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="리그명검색" name='search'/>
 					</div>
@@ -145,10 +153,75 @@
 		<%if(category.equals("main")) { %>
 		<div class="container">
 		<div class="jumbotron">
-			<h1 class="text-center"> 우들리의 오신것을 환영합니다.</h1>
-			<p class="text-center"> 우들리는 동호회 기능 및 리그 기능을 가진 사이트입니다. 다양한 리그를 생성하고 참여해보세요!</p>
+				<h1 class="text-center"> 우들리의 오신것을 환영합니다.</h1>
+				<p class="text-center"> 우들리는 동호회 기능 및 리그 기능을 가진 사이트입니다. 다양한 리그를 생성하고 참여해보세요!</p>
+			</div>
 		</div>
-	</div>
+
+	<div class="container">
+			<br/>
+			<div class="row">
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(0).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(0).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(0).getLeague_name() %></h2> 
+					</button>
+				</div>
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(1).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(1).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(1).getLeague_name() %></h2> 
+					</button>
+				</div>
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(2).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(2).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(2).getLeague_name() %></h2> 
+					</button>
+				</div>
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(3).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(3).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(3).getLeague_name() %></h2> 
+					</button>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(4).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(4).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(4).getLeague_name() %></h2> 
+					</button>
+				</div>
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(5).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(5).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(5).getLeague_name() %></h2> 
+					</button>
+				</div>
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(6).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(6).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(6).getLeague_name() %></h2> 
+					</button>
+				</div>
+				<div class="col-sm-3" style="text-align: center;">
+					<button style="background-color: white; border: 0;" onclick="window.location='../League/infoLeague.jsp?category=league&league_num=<%=mainList.get(7).getLeague_num()%>'">
+						<img style="width: 100%; height: 100%;" src="/woodley/save/<%=mainList.get(7).getBanner()%>"/>
+						<br/>
+						<h2 style="background-color: #90CAF9; margin-top: 0; "><%=mainList.get(7).getLeague_name() %></h2> 
+					</button>
+				</div>
+			</div>
+		</div>
 	<footer style="background-color: #90CAF9; color: #000000; border-color: #000000;">
 		<div class="container">
 			<br/>
